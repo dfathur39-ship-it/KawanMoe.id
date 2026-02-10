@@ -13,7 +13,7 @@
     width: 100%;
     min-height: 100%;
     height: 100%;
-    background: #fff;
+    background: #fff; /* putih saat fullscreen agar QR mudah di-scan */
     box-sizing: border-box;
 }
 #qrcode-wrapper:fullscreen #qrcode,
@@ -33,13 +33,13 @@
                 <h5 class="mb-0"><i class="bi bi-qr-code me-2"></i>Tampilkan QR Code Absen</h5>
             </div>
             <div class="card-body text-center">
-                <p class="text-muted mb-3">Siswa scan QR code ini menggunakan kamera HP untuk absen. Kode berlaku 3 detik.</p>
+                <p class="text-muted mb-3">Siswa scan QR code ini menggunakan kamera HP untuk absen. Kode otomatis berganti setiap 3 detik.</p>
                 <p class="small text-muted mb-2"><i class="bi bi-hand-index me-1"></i>Ketuk 2 kali QR code untuk full screen</p>
-                <div id="qrcode-wrapper" class="mb-3 p-4 bg-light rounded-3 d-inline-block" role="button" tabindex="0" style="cursor:pointer;">
+                <div id="qrcode-wrapper" class="mb-3 p-4 rounded-3 d-inline-block" role="button" tabindex="0" style="cursor:pointer;background:#334155;">
                     <canvas id="qrcode"></canvas>
                 </div>
-                <p class="small text-muted mb-2">Berakhir: <span id="countdown-text">{{ $expiresAt->format('H:i:s') }} ({{ $expiresAt->diffForHumans() }})</span></p>
-                <a href="{{ route('qrabsen.show') }}" class="btn btn-primary"><i class="bi bi-arrow-clockwise me-2"></i>Generate QR Baru</a>
+                <p class="small text-muted mb-2">Berakhir: <span id="countdown-text">00:00:03 tersisa</span></p>
+                <a href="{{ route('qrabsen.show') }}" class="btn btn-outline-primary btn-sm"><i class="bi bi-arrow-clockwise me-2"></i>Refresh halaman</a>
             </div>
         </div>
     </div>
@@ -50,26 +50,51 @@
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1/build/qrcode.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const expiresAtUnix = @json($expiresAt->timestamp);
-    const url = @json($scanUrl);
-    QRCode.toCanvas(document.getElementById('qrcode'), url, { width: 280, margin: 2 }, function(err) {
-        if (err) console.error(err);
-    });
+    var canvas = document.getElementById('qrcode');
     var countdownEl = document.getElementById('countdown-text');
-    function updateCountdown() {
-        var now = Math.floor(Date.now() / 1000);
-        var left = expiresAtUnix - now;
-        if (left <= 0) {
-            countdownEl.textContent = 'Kode berakhir. Klik "Generate QR Baru" untuk QR baru.';
-            clearInterval(countdownInterval);
-            return;
-        }
-        var m = Math.floor(left / 60);
-        var s = left % 60;
-        countdownEl.textContent = '00:' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s + ' tersisa';
+    var countdownInterval = null;
+
+    function drawQr(url) {
+        QRCode.toCanvas(canvas, url, { width: 280, margin: 2 }, function(err) {
+            if (err) console.error(err);
+        });
     }
-    var countdownInterval = setInterval(updateCountdown, 1000);
-    updateCountdown();
+
+    function startCountdown(expiresAtUnix) {
+        if (countdownInterval) clearInterval(countdownInterval);
+        function tick() {
+            var now = Math.floor(Date.now() / 1000);
+            var left = expiresAtUnix - now;
+            if (left <= 0) {
+                countdownEl.textContent = 'Memperbarui...';
+                return;
+            }
+            var m = Math.floor(left / 60);
+            var s = left % 60;
+            countdownEl.textContent = '00:' + (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s + ' tersisa';
+        }
+        tick();
+        countdownInterval = setInterval(tick, 1000);
+    }
+
+    function refreshQr() {
+        fetch('{{ route("qrabsen.refresh") }}', { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                drawQr(data.scanUrl);
+                startCountdown(data.expiresAt);
+            })
+            .catch(function() {
+                countdownEl.textContent = 'Gagal refresh. Coba refresh halaman.';
+            });
+    }
+
+    // Tampilkan QR pertama (dari server)
+    drawQr(@json($scanUrl));
+    startCountdown(@json($expiresAt->timestamp));
+
+    // Setiap 3 detik auto-generate QR baru
+    setInterval(refreshQr, 3000);
 
     function toggleFullscreen() {
         var wrapper = document.getElementById('qrcode-wrapper');

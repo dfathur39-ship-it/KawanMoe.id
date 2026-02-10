@@ -9,22 +9,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <style>
-        :root { --primary-color: #6366f1; --primary-dark: #4f46e5; }
+        :root { --primary-color: #6366f1; --primary-dark: #4f46e5; --bg-dark: #0f172a; --bg-card: #1e293b; --border-dark: #334155; --text-primary: #f1f5f9; --text-muted: #94a3b8; }
         * { font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        body { min-height: 100vh; background: var(--bg-dark); display: flex; align-items: center; justify-content: center; padding: 2rem; color: var(--text-primary); }
         .register-container { width: 100%; max-width: 480px; }
-        .register-card { background: white; border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .register-card { background: var(--bg-card); border: 1px solid var(--border-dark); border-radius: 24px; padding: 2.5rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
         .brand-logo { width: 70px; height: 70px; background: linear-gradient(135deg, var(--primary-color) 0%, #ec4899 100%); border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
         .brand-logo i { font-size: 2rem; color: white; }
         .brand-title { font-size: 1.5rem; font-weight: 800; text-align: center; margin-bottom: 0.25rem; background: linear-gradient(135deg, var(--primary-color) 0%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .brand-subtitle { text-align: center; color: #64748b; margin-bottom: 1.5rem; font-size: 0.9rem; }
-        .form-label { font-weight: 600; color: #334155; margin-bottom: 0.5rem; }
-        .form-control, .form-select { border-radius: 10px; padding: 0.75rem 1rem; border: 2px solid #e2e8f0; }
-        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); }
+        .brand-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem; }
+        .form-label { font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .form-control, .form-select { border-radius: 10px; padding: 0.75rem 1rem; border: 2px solid var(--border-dark); background: var(--bg-dark); color: var(--text-primary); }
+        .form-control::placeholder { color: var(--text-muted); }
+        .form-control:focus, .form-select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); background: var(--bg-dark); color: var(--text-primary); }
         .btn-register { width: 100%; padding: 0.875rem; font-weight: 600; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%); border: none; color: white; }
-        .btn-register:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); }
-        .login-link { text-align: center; color: #64748b; margin-top: 1.5rem; }
-        .login-link a { color: var(--primary-color); font-weight: 600; text-decoration: none; }
+        .btn-register:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4); color: white; }
+        .login-link { text-align: center; color: var(--text-muted); margin-top: 1.5rem; }
+        .login-link a { color: #93c5fd; font-weight: 600; text-decoration: none; }
+        .login-link a:hover { color: #bfdbfe; }
+        small.text-muted { color: var(--text-muted) !important; }
+        .alert { border: 1px solid var(--border-dark); }
+        .input-group .form-control { border-radius: 10px 0 0 10px; }
+        .input-group .btn-password-toggle { cursor: pointer; color: var(--text-muted); border-radius: 0 10px 10px 0; border: 2px solid var(--border-dark); border-left: none; background: var(--bg-dark); }
+        .input-group .btn-password-toggle:hover { color: var(--text-primary); }
     </style>
 </head>
 <body>
@@ -52,11 +59,17 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Min. 8 karakter" required>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control" placeholder="Min. 8 karakter" required>
+                            <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan password"><i class="bi bi-eye"></i></button>
+                        </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Konfirmasi Password</label>
-                        <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password" required>
+                        <div class="input-group">
+                            <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password" required>
+                            <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan password"><i class="bi bi-eye"></i></button>
+                        </div>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-register"><i class="bi bi-person-plus me-2"></i>Daftar Sekarang</button>
@@ -64,5 +77,17 @@
             <p class="login-link">Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a></p>
         </div>
     </div>
+    <script>
+        document.querySelectorAll('.btn-password-toggle').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var wrap = this.closest('.input-group');
+                var input = wrap && wrap.querySelector('input');
+                if (!input) return;
+                var icon = this.querySelector('i');
+                if (input.type === 'password') { input.type = 'text'; icon.classList.replace('bi-eye', 'bi-eye-slash'); this.setAttribute('aria-label', 'Sembunyikan password'); }
+                else { input.type = 'password'; icon.classList.replace('bi-eye-slash', 'bi-eye'); this.setAttribute('aria-label', 'Tampilkan password'); }
+            });
+        });
+    </script>
 </body>
 </html>

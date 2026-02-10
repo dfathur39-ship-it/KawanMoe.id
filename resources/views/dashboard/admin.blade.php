@@ -75,10 +75,10 @@
             <div class="card-header"><h5 class="mb-0"><i class="bi bi-calendar-check me-2 text-success"></i>Absensi Hari Ini</h5></div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#d1fae5;"><div class="fs-2 fw-bold text-success">{{ $statsHariIni['hadir'] }}</div><div class="text-success">Hadir</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#fef3c7;"><div class="fs-2 fw-bold text-warning">{{ $statsHariIni['izin'] }}</div><div class="text-warning">Izin</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#cffafe;"><div class="fs-2 fw-bold text-info">{{ $statsHariIni['sakit'] }}</div><div class="text-info">Sakit</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#fee2e2;"><div class="fs-2 fw-bold text-danger">{{ $statsHariIni['alpha'] }}</div><div class="text-danger">Alpha</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);"><div class="fs-2 fw-bold text-success">{{ $statsHariIni['hadir'] }}</div><div class="text-success">Hadir</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);"><div class="fs-2 fw-bold text-warning">{{ $statsHariIni['izin'] }}</div><div class="text-warning">Izin</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(6,182,212,0.2);border:1px solid rgba(6,182,212,0.4);"><div class="fs-2 fw-bold text-info">{{ $statsHariIni['sakit'] }}</div><div class="text-info">Sakit</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);"><div class="fs-2 fw-bold text-danger">{{ $statsHariIni['alpha'] }}</div><div class="text-danger">Alpha</div></div></div>
                 </div>
                 <hr>
                 <h6 class="mb-3">Rekap Bulan Ini</h6>
@@ -129,7 +129,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height:400px;overflow-y:auto;">
                     <table class="table mb-0">
-                        <thead style="position:sticky;top:0;background:white;"><tr><th>Siswa</th><th>Kelas</th><th>Status</th><th>Waktu</th></tr></thead>
+                        <thead style="position:sticky;top:0;background:#334155;"><tr><th>Siswa</th><th>Kelas</th><th>Status</th><th>Waktu</th></tr></thead>
                         <tbody>
                             @forelse($absensiTerbaru as $absen)
                                 <tr>
@@ -171,7 +171,15 @@ new Chart(ctx, {
             { label: 'Alpha', data: chartData.map(d => d.alpha), backgroundColor: '#ef4444', borderRadius: 6 }
         ]
     },
-    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { color: '#f1f5f9' } } },
+        scales: {
+            y: { beginAtZero: true, ticks: { stepSize: 1, color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.2)' } },
+            x: { ticks: { color: '#94a3b8' }, grid: { color: 'rgba(148,163,184,0.2)' } }
+        }
+    }
 });
 </script>
 @endpush

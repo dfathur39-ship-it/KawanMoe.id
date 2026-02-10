@@ -73,6 +73,23 @@
                                 <small class="text-muted">Format: JPG, PNG. Max: 2MB</small>
                                 @error('foto')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
                             </div>
+                            <h6 class="mb-3 text-info mt-3">Akun Login (opsional)</h6>
+                            <p class="small text-muted mb-2">Isi password untuk langsung membuat akun login siswa (email di atas wajib). Kosongkan jika siswa akan daftar sendiri.</p>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Password</label>
+                                <div class="input-group">
+                                    <input type="password" name="password" class="form-control" placeholder="Min. 8 karakter" autocomplete="new-password">
+                                    <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan / sembunyikan password"><i class="bi bi-eye"></i></button>
+                                </div>
+                                @error('password')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Konfirmasi Password</label>
+                                <div class="input-group">
+                                    <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password" autocomplete="new-password">
+                                    <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan / sembunyikan password"><i class="bi bi-eye"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="d-flex gap-2 mt-4 pt-3 border-top">

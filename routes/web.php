@@ -37,8 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 
-    // QR Absen: admin tampilkan QR, siswa scan
+    // QR Absen: admin tampilkan QR, siswa scan (refresh = auto setiap 3 detik)
     Route::get('/qrabsen', [QrAbsenController::class, 'showQr'])->name('qrabsen.show')->middleware('role:admin');
+    Route::get('/qrabsen/refresh', [QrAbsenController::class, 'refreshQr'])->name('qrabsen.refresh')->middleware('role:admin');
     Route::post('/absen/submit', [QrAbsenController::class, 'submitScan'])->name('absen.submit');
 
     // Admin only: Kelas, Siswa, Absensi manual, Report

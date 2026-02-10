@@ -107,10 +107,10 @@
             <div class="card-header"><h5 class="mb-0">Rekap Bulan Ini</h5></div>
             <div class="card-body">
                 <div class="row g-3">
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#d1fae5;"><div class="fs-2 fw-bold text-success">{{ $statsBulanIni['hadir'] ?? 0 }}</div><div class="text-success">Hadir</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#fef3c7;"><div class="fs-2 fw-bold text-warning">{{ $statsBulanIni['izin'] ?? 0 }}</div><div class="text-warning">Izin</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#cffafe;"><div class="fs-2 fw-bold text-info">{{ $statsBulanIni['sakit'] ?? 0 }}</div><div class="text-info">Sakit</div></div></div>
-                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:#fee2e2;"><div class="fs-2 fw-bold text-danger">{{ $statsBulanIni['alpha'] ?? 0 }}</div><div class="text-danger">Alpha</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(16,185,129,0.2);border:1px solid rgba(16,185,129,0.4);"><div class="fs-2 fw-bold text-success">{{ $statsBulanIni['hadir'] ?? 0 }}</div><div class="text-success">Hadir</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(245,158,11,0.2);border:1px solid rgba(245,158,11,0.4);"><div class="fs-2 fw-bold text-warning">{{ $statsBulanIni['izin'] ?? 0 }}</div><div class="text-warning">Izin</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(6,182,212,0.2);border:1px solid rgba(6,182,212,0.4);"><div class="fs-2 fw-bold text-info">{{ $statsBulanIni['sakit'] ?? 0 }}</div><div class="text-info">Sakit</div></div></div>
+                    <div class="col-6"><div class="p-3 rounded-3 text-center" style="background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4);"><div class="fs-2 fw-bold text-danger">{{ $statsBulanIni['alpha'] ?? 0 }}</div><div class="text-danger">Alpha</div></div></div>
                 </div>
             </div>
         </div>
@@ -121,7 +121,7 @@
             <div class="card-body p-0">
                 <div class="table-responsive" style="max-height:280px;">
                     <table class="table mb-0">
-                        <thead style="position:sticky;top:0;background:white;"><tr><th>Tanggal</th><th>Status</th><th>Jam datang</th></tr></thead>
+                        <thead style="position:sticky;top:0;background:#334155;"><tr><th>Tanggal</th><th>Status</th><th>Jam datang</th></tr></thead>
                         <tbody>
                             @forelse($absensiTerbaru as $absen)
                                 <tr>

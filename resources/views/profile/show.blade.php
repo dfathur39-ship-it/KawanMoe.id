@@ -40,11 +40,17 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Password Baru</label>
-                            <input type="password" name="password" class="form-control" placeholder="Min. 8 karakter">
+                            <div class="input-group">
+                                <input type="password" name="password" class="form-control" placeholder="Min. 8 karakter">
+                                <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan / sembunyikan password"><i class="bi bi-eye"></i></button>
+                            </div>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation" class="form-control">
+                            <div class="input-group">
+                                <input type="password" name="password_confirmation" class="form-control" placeholder="Ulangi password">
+                                <button type="button" class="input-group-text btn-password-toggle" tabindex="-1" aria-label="Tampilkan password" title="Tampilkan / sembunyikan password"><i class="bi bi-eye"></i></button>
+                            </div>
                         </div>
                     </div>
                     @error('password')<div class="text-danger small mb-2">{{ $message }}</div>@enderror

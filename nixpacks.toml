@@ -1,0 +1,7 @@
+# Nixpacks config for Laravel on Railway
+# https://docs.railway.com/builds/nixpacks
+# Nixpacks auto-detects PHP/Laravel, runs composer install + npm install + npm run build.
+
+[variables]
+# Root web ke folder public (wajib untuk Laravel)
+NIXPACKS_PHP_ROOT_DIR = "/app/public"

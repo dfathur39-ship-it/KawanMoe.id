@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Siswa;
 use App\Models\Kelas;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\Password;
 
 class SiswaController extends Controller
 {
@@ -38,7 +40,7 @@ class SiswaController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $rules = [
             'nis' => 'required|unique:siswa,nis',
             'nama_lengkap' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
@@ -49,28 +51,51 @@ class SiswaController extends Controller
             'no_telepon' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'foto' => 'nullable|image|max:2048',
-        ]);
+        ];
 
-        $data = $request->except('foto');
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'confirmed', Password::min(8)];
+            $rules['email'] = 'required|email|unique:users,email';
+        }
+
+        $request->validate($rules);
+
+        $data = $request->except(['foto', 'password', 'password_confirmation']);
 
         if ($request->hasFile('foto')) {
             $data['foto'] = $request->file('foto')->store('siswa', 'public');
         }
 
-        Siswa::create($data);
+        $siswa = Siswa::create($data);
 
-        return redirect()->route('siswa.index')->with('success', 'Siswa berhasil ditambahkan!');
+        if ($request->filled('password') && $request->email) {
+            User::create([
+                'name' => $siswa->nama_lengkap,
+                'email' => $request->email,
+                'password' => $request->password,
+                'role' => 'siswa',
+                'siswa_id' => $siswa->id,
+                'kelas_id' => $siswa->kelas_id,
+            ]);
+        }
+
+        $msg = 'Siswa berhasil ditambahkan!';
+        if ($request->filled('password')) {
+            $msg = 'Siswa dan akun login berhasil ditambahkan!';
+        }
+        return redirect()->route('siswa.index')->with('success', $msg);
     }
 
     public function edit(Siswa $siswa)
     {
+        $siswa->load('user');
         $kelas = Kelas::where('is_active', true)->get();
         return view('siswa.edit', compact('siswa', 'kelas'));
     }
 
     public function update(Request $request, Siswa $siswa)
     {
-        $request->validate([
+        $rules = [
             'nis' => 'required|unique:siswa,nis,' . $siswa->id,
             'nama_lengkap' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
@@ -81,9 +106,15 @@ class SiswaController extends Controller
             'no_telepon' => 'nullable|string|max:20',
             'email' => 'nullable|email',
             'foto' => 'nullable|image|max:2048',
-        ]);
+        ];
 
-        $data = $request->except('foto');
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'confirmed', Password::min(8)];
+        }
+
+        $request->validate($rules);
+
+        $data = $request->except(['foto', 'password', 'password_confirmation']);
 
         if ($request->hasFile('foto')) {
             if ($siswa->foto) {
@@ -94,7 +125,38 @@ class SiswaController extends Controller
 
         $siswa->update($data);
 
-        return redirect()->route('siswa.index')->with('success', 'Data siswa berhasil diupdate!');
+        if ($request->filled('password')) {
+            $user = $siswa->user;
+            $email = $request->email ?: $siswa->email;
+            if ($user) {
+                $user->update([
+                    'password' => $request->password,
+                    'name' => $siswa->nama_lengkap,
+                    'email' => $email ?: $user->email,
+                ]);
+            } else {
+                if (empty($email)) {
+                    return back()->withErrors(['email' => 'Email wajib diisi untuk membuat akun login siswa.'])->withInput();
+                }
+                if (User::where('email', $email)->exists()) {
+                    return back()->withErrors(['email' => 'Email ini sudah dipakai akun lain.'])->withInput();
+                }
+                User::create([
+                    'name' => $siswa->nama_lengkap,
+                    'email' => $email,
+                    'password' => $request->password,
+                    'role' => 'siswa',
+                    'siswa_id' => $siswa->id,
+                    'kelas_id' => $siswa->kelas_id,
+                ]);
+            }
+        }
+
+        $msg = 'Data siswa berhasil diupdate!';
+        if ($request->filled('password')) {
+            $msg = 'Data siswa dan password berhasil diupdate!';
+        }
+        return redirect()->route('siswa.index')->with('success', $msg);
     }
 
     public function destroy(Siswa $siswa)

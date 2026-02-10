@@ -29,6 +29,26 @@ class QrAbsenController extends Controller
     }
 
     /**
+     * API: generate token & URL QR baru (untuk auto-refresh setiap 3 detik).
+     */
+    public function refreshQr(Request $request)
+    {
+        $token = Str::random(32);
+        $expiresAt = now()->addSeconds(3);
+        Cache::put('qrabsen_' . $token, [
+            'created_at' => now()->toDateTimeString(),
+            'expires_at' => $expiresAt->toDateTimeString(),
+        ], $expiresAt);
+
+        $scanUrl = route('absen.scan', ['token' => $token]);
+
+        return response()->json([
+            'scanUrl' => $scanUrl,
+            'expiresAt' => $expiresAt->timestamp,
+        ]);
+    }
+
+    /**
      * Halaman untuk siswa scan QR (bisa dibuka dari HP setelah scan).
      * URL dari QR: /absen/scan/{token}
      */
